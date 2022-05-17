@@ -3,7 +3,6 @@ import Lottie from "react-lottie";
 import FadeIn from "react-fade-in";
 import "../App.scss";
 import * as imageLoader from '../assets/prepare-food.json';
-import {BiRightArrow, BiLeftArrow} from 'react-icons/bi' 
 import Card from './Card'
 
 function Recepies(props) {
@@ -34,7 +33,6 @@ function Recepies(props) {
         // fetch('http://localhost:3000/groceryList')
           .then(response => response.json())
           .then(json => {
-              console.log("RESPONSE JSON: ", json)
             setRecepies({
                 ...recepies,
               groceryList: json,
@@ -66,8 +64,7 @@ function Recepies(props) {
         })
     }, [])
 
-    const {recepiesList, done, selected} = recepies;
-    let showComplete = selected ? "cards-selected" : "cards-standard"
+    const {recepiesList, done, selected, selectionComplete, groceryList} = recepies;
     console.log("SELECTED: ", selected)
     return (
         <React.Fragment>
@@ -81,20 +78,29 @@ function Recepies(props) {
                         </FadeIn>
                     ) : (
                         <FadeIn>
-                            <div className='cards-slider-wrapper'>
-                                {recepiesList.map((recept, index) => (
-                                    <Card
-                                        onClick={() => addToList(recept)}
-                                        key={index}
-                                        recepie={recept}
-                                        index={index}
-                                    />
-                                
-                                ))}
-                            </div>
-                            <button onClick={confirmSelection}>Slutför och generera inköpslista</button>
+                            {!selectionComplete ? (
+                                <div>
+                                    <div className='cards-slider-wrapper'>
+                                        {recepiesList.map((recept, index) => (
+                                        <Card
+                                            onClick={() => addToList(recept)}
+                                            key={index}
+                                            recepie={recept}
+                                            index={index}
+                                        />
+                                    
+                                    ))}
+                                    </div>
+                                    <button onClick={confirmSelection}>Slutför och generera inköpslista</button>
+                                </div>
+                            ) : (
+                                <div>
+                                    {groceryList.map((grocery, index) => (
+                                    <h1>{grocery}</h1>
+                                    ))}                    
+                                </div>
+                            )}
                         </FadeIn>
-                        
                     )}
                 </div>
             </React.Fragment>

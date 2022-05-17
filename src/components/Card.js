@@ -11,12 +11,10 @@ const Card = ({recepie, index, onClick}) => {
 
   const handleClick = (recept) => {
     setCard({selected: true});
-    // list.push(recept)
     onClick(recept)
     }
   const {selected} = card
   let showComplete = selected ? "cards-selected" : "cards-standard"
-
 
   return (
         <div id={`card-${index}`} className={showComplete} onClick={() => handleClick(recepie,index)}>
