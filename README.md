@@ -1,13 +1,2 @@
 # Description
-Small image carousel application that fetches images from the Unsplash API
-
-
-# Prerequisites
-
-Please use node version 14.X.X
-
-Then: 
-
-*npm i*
-
-*npm start*
+Frontend app for selecting dishes and producing sorted grocery shopping list. App talks to raspberry pi hosted server.
