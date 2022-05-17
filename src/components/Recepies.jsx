@@ -7,10 +7,13 @@ import {BiRightArrow, BiLeftArrow} from 'react-icons/bi'
 import Card from './Card'
 
 function Recepies(props) {
-
+    const list = []
     const [recepies, setRecepies] = useState({
             done: false,
+            selected: false,
+            selectionComplete: false,
             recepiesList: [],
+            groceryList: [],
             selected: false
     });
     const defaultOptions = {
@@ -21,11 +24,36 @@ function Recepies(props) {
             preserveAspectRatio: "xMidYMid slice"
         }
     }
+    const confirmSelection = () => {
+        const requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ list })
+      };
+        fetch('http://192.168.1.4:5001/Siri/ReactRecepies', requestOptions)
+        // fetch('http://localhost:3000/groceryList')
+          .then(response => response.json())
+          .then(json => {
+              console.log("RESPONSE JSON: ", json)
+            setRecepies({
+                ...recepies,
+              groceryList: json,
+              selectionComplete: true
+            })
+          })
+          .catch(function() {
+            console.log("error")
+        })
+      }
+    const addToList = (recept) => {
+        list.push(recept)
+        }
+    
     
     useEffect(() => {
         setRecepies({done: false});
-        // fetch("http://192.168.1.4:5001/Siri/Recepies")
-        fetch("http://localhost:3000/recepies")
+        fetch("http://192.168.1.4:5001/Siri/Recepies")
+        // fetch("http://localhost:3000/recepies")
         .then(response => response.json())
         .then(json => {
             setRecepies({
@@ -39,6 +67,7 @@ function Recepies(props) {
     }, [])
 
     const {recepiesList, done, selected} = recepies;
+    let showComplete = selected ? "cards-selected" : "cards-standard"
     console.log("SELECTED: ", selected)
     return (
         <React.Fragment>
@@ -52,16 +81,20 @@ function Recepies(props) {
                         </FadeIn>
                     ) : (
                         <FadeIn>
-                            {recepiesList.map((recept, index) => (
-                                <Card
-                                    key={index}
-                                    recepie={recept}
-                                    index={index}
-                                >{recept[0]}</Card>
+                            <div className='cards-slider-wrapper'>
+                                {recepiesList.map((recept, index) => (
+                                    <Card
+                                        onClick={() => addToList(recept)}
+                                        key={index}
+                                        recepie={recept}
+                                        index={index}
+                                    />
                                 
-                            ))}
-                            
+                                ))}
+                            </div>
+                            <button onClick={confirmSelection}>Slutför och generera inköpslista</button>
                         </FadeIn>
+                        
                     )}
                 </div>
             </React.Fragment>

@@ -2,8 +2,22 @@
 .App {
     text-align: center;
   }
-.cards-green {
-  color: green
+.cards-selected {
+  color: green;
+  width: 320px;
+  border: 5px solid gray;
+  margin: 0;
+} 
+.cards-standard {
+  width: 320px;
+  border: 5px solid gray;
+  margin: 0;
 } 
 
-  
+.cards-slider-wrapper {
+  display: flex;
+  position: relative;
+  flex-wrap: wrap;
+}
+
+
