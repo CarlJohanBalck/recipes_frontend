@@ -3,7 +3,7 @@ import React from 'react';
 const Summary = () => {
     return (
         <div>
-            <navbar>Summary</navbar>
+            <h2>Summary</h2>
         </div>
     );
 };

@@ -43,9 +43,13 @@ function Recepies(props) {
             console.log("error")
         })
       }
-    const addToList = (recept) => {
-        list.push(recept)
-        }
+    const addToList = (recept, selected) => {
+        if(selected){
+            list.splice(recept, 1)
+        }else{
+            list.push(recept)
+        }        
+    }
     
     
     useEffect(() => {
@@ -65,7 +69,6 @@ function Recepies(props) {
     }, [])
 
     const {recepiesList, done, selected, selectionComplete, groceryList} = recepies;
-    console.log("SELECTED: ", selected)
     return (
         <React.Fragment>
                 <div>
@@ -83,7 +86,7 @@ function Recepies(props) {
                                     <div className='cards-slider-wrapper'>
                                         {recepiesList.map((recept, index) => (
                                         <Card
-                                            onClick={() => addToList(recept)}
+                                            onClick={(recept, selected) => addToList(recept, selected)}
                                             key={index}
                                             recepie={recept}
                                             index={index}
