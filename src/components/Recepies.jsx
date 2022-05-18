@@ -33,10 +33,12 @@ function Recepies(props) {
         // fetch('http://localhost:3000/groceryList')
           .then(response => response.json())
           .then(json => {
+              console.log("JSON LENGTH: ",)
             setRecepies({
                 ...recepies,
-              groceryList: json,
-              selectionComplete: true
+              groceryList: json.slice(0, -1),
+              selectionComplete: true,
+              price: json[json.length-1]
             })
           })
           .catch(function() {
@@ -50,7 +52,6 @@ function Recepies(props) {
             list.push(recept)
         }        
     }
-    
     
     useEffect(() => {
         setRecepies({done: false});
@@ -68,7 +69,7 @@ function Recepies(props) {
         })
     }, [])
 
-    const {recepiesList, done, selected, selectionComplete, groceryList} = recepies;
+    const {recepiesList, done, selectionComplete, groceryList, price} = recepies;
     return (
         <React.Fragment>
                 <div>
@@ -85,19 +86,20 @@ function Recepies(props) {
                                 <div>
                                     <div className='cards-slider-wrapper'>
                                         {recepiesList.map((recept, index) => (
-                                        <Card
-                                            onClick={(recept, selected) => addToList(recept, selected)}
-                                            key={index}
-                                            recepie={recept}
-                                            index={index}
-                                        />
-                                    
+                                            <Card
+                                                onClick={(recept, selected) => addToList(recept, selected)}
+                                                key={index}
+                                                recepie={recept}
+                                                index={index}
+                                            />
                                     ))}
                                     </div>
                                     <button onClick={confirmSelection}>Slutför och generera inköpslista</button>
                                 </div>
                             ) : (
+                            
                                 <div>
+                                    <h1>Uppskattad kostnad: {price}kr</h1>
                                     {groceryList.map((grocery, index) => (
                                     <h1>{grocery}</h1>
                                     ))}                    
