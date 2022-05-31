@@ -30,9 +30,11 @@ code {
 }
 .card .card-image .card-title{
   color: black;
-  font-weight: 400
+  font-weight: 400;
+  z-index: 1;
 }
-.cart{
+/* .card-image img { display: block; position: relative; z-index: 1; width: auto; height: 100%; } */
+.card-image .fade { position: absolute; bottom: 0; width: 100%; height: 170px; z-index: 1; background: rgba(255, 255, 255, 0) linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.9) 70%) repeat scroll 0 0;  }.cart{
   margin-top:40px;
 }
 .collection .collection-item{
