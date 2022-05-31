@@ -1,7 +1,6 @@
 import React, {useEffect, useReducer} from 'react';
 import Lottie from "react-lottie";
 import FadeIn from "react-fade-in";
-import "../App.scss";
 import * as imageLoader from '../assets/prepare-food.json';
 import Card from './Card'
 var config = require('../config');
@@ -39,7 +38,6 @@ function reducer(state, action) {
             currentList: [...state.currentList, action.payload]
         };
     case 'remove_from_list':
-        console.log("REMOVE FROM LIST----")
         return {
             ...state,
             currentList: [...state.currentList.slice(1)]
@@ -77,12 +75,8 @@ function Recepies(props) {
         })
       }
     const addToList = (recept, selected) => {
-        if(selected){
-            dispatch({type: "remove_from_list", payload: recept})
-            
-        }else{
-            dispatch({type: "add_to_list", payload: recept})
-        }        
+        console.log("ADD TO LIST----")
+        selected ? dispatch({type: "remove_from_list", payload: recept}) : dispatch({type: "add_to_list", payload: recept})
     }
     
     useEffect(() => {
@@ -95,7 +89,20 @@ function Recepies(props) {
             console.log("error")
         })
     }, [])
-    const {done,selectionComplete, recepiesList, price, groceryList } = state
+    const {done, selectionComplete, recepiesList, price, groceryList, currentList } = state
+
+    let itemListTest = recepiesList.map((recept, index)=>{
+        return(
+            <Card
+                onClick={(recept, selected) => addToList(recept, selected)}
+                key={index}
+                recepie={recept}
+                index={index}
+            />
+        )
+    })
+   
+     
     return (
         <React.Fragment>
                 <div>
@@ -109,21 +116,17 @@ function Recepies(props) {
                     ) : (
                         <FadeIn>
                             {!selectionComplete ? (
-                                <div>
-                                    <div className='cards-slider-wrapper'>
-                                        {recepiesList.map((recept, index) => (
-                                            <Card
-                                                onClick={(recept, selected) => addToList(recept, selected)}
-                                                key={index}
-                                                recepie={recept}
-                                                index={index}
-                                            />
-                                    ))}
-                                    </div>
-                                    <button onClick={confirmSelection}>Slutför och generera inköpslista</button>
+                                <div className="container">
+                                    <h3 className="center">Recept</h3>
+                                    <div className="box">
+                                    {itemListTest}
+                                </div>
+                                    <button class="btn waves-effect waves-light" type="submit" name="action" onClick={confirmSelection}>Bekräfta inköpslista
+                                        <i class="material-icons right">send</i>
+                                    </button>
                                 </div>
                             ) : (
-                            
+
                                 <div>
                                     <h1>Uppskattad kostnad: {price}kr</h1>
                                     {groceryList.map((grocery, index) => (

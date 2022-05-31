@@ -1,4 +1,7 @@
 import React, {useState} from 'react';
+import genericfood from '../assets/genericfood.jpg'
+
+// import Soyalax from '../assets/soyalax.jpg'
 
 const Card = ({recepie, index, onClick}) => {
   
@@ -15,12 +18,20 @@ const Card = ({recepie, index, onClick}) => {
     onClick(recept, selected)
     }
   const {selected} = card
-  let showComplete = selected ? "cards-selected" : "cards-standard"
-
   return (
-        <div id={`card-${index}`} key={index} className={showComplete} onClick={() => handleClick(recepie, selected)}>
-          <h1>{recepie[0].replace(/ *\([^)]*\) */g, "").slice(0, -1)}</h1>
+    <div className="card" key={recepie.id}>
+        <div className="card-image">
+            <img src={genericfood} alt=''/>
+            {/* <img src={Soyalax} alt={recepie.title}/> */}
+            <span className="card-title">{recepie[0].replace(/ *\([^)]*\) */g, "").slice(0, -1)}</span>
+            <span to="/" className="btn-floating halfway-fab waves-effect waves-light red" onClick={() => handleClick(recepie, selected)}><i className="material-icons">add</i></span>
         </div>
+
+        <div className="card-content">
+            <p>{recepie.desc}</p>
+            <p><b>Pris: {recepie.price}</b></p>
+        </div>
+      </div>
   );
  }
 
