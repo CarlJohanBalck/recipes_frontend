@@ -1,12 +1,19 @@
-import Layout from './components/Layout';
+import React, { Component } from 'react';
 import './App.css';
+import {BrowserRouter} from 'react-router-dom'
+import Recepies from './components/Recepies';
 
-function App() {
-  return (
-    <div className="App">
-      <Layout/>
-    </div>
-  );
+class App extends Component {
+  render(){
+    return (
+      <BrowserRouter>
+        <div className="App">
+          <Recepies/>
+        </div>
+      </BrowserRouter>
+    );
+  }
+  
 }
 
 export default App;

@@ -18,7 +18,7 @@ const Card = ({recepie, index, onClick}) => {
   let showComplete = selected ? "cards-selected" : "cards-standard"
 
   return (
-        <div id={`card-${index}`} className={showComplete} onClick={() => handleClick(recepie, selected)}>
+        <div id={`card-${index}`} key={index} className={showComplete} onClick={() => handleClick(recepie, selected)}>
           <h1>{recepie[0].replace(/ *\([^)]*\) */g, "").slice(0, -1)}</h1>
         </div>
   );

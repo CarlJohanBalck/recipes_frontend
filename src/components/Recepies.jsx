@@ -1,20 +1,57 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useReducer} from 'react';
 import Lottie from "react-lottie";
 import FadeIn from "react-fade-in";
 import "../App.scss";
 import * as imageLoader from '../assets/prepare-food.json';
 import Card from './Card'
+var config = require('../config');
+
+
+const initialState = {
+    done: false,
+    selected: false,
+    selectionComplete: false,
+    recepiesList: [],
+    groceryList: [],
+    selectionList: [],
+    currentList: []
+}
+
+function reducer(state, action) {
+    switch (action.type) {
+      case 'initialize_success':
+        return {
+            ...state,
+            recepiesList: action.payload,
+            done: true
+
+        };
+    case 'confirm_selection_success':
+        return {
+            ...state,
+            groceryList: action.payload.slice(0, -1),
+            selectionComplete: true,
+            price: action.payload[action.payload.length-1]
+        };
+    case 'add_to_list':
+        return {
+            ...state,
+            currentList: [...state.currentList, action.payload]
+        };
+    case 'remove_from_list':
+        console.log("REMOVE FROM LIST----")
+        return {
+            ...state,
+            currentList: [...state.currentList.slice(1)]
+        };
+      default:
+        throw new Error();
+    }
+  }
 
 function Recepies(props) {
-    const list = []
-    const [recepies, setRecepies] = useState({
-            done: false,
-            selected: false,
-            selectionComplete: false,
-            recepiesList: [],
-            groceryList: [],
-            selected: false
-    });
+    const [state, dispatch] = useReducer(reducer, initialState);
+    
     const defaultOptions = {
         loop: true,
         autoplay: true,
@@ -24,22 +61,16 @@ function Recepies(props) {
         }
     }
     const confirmSelection = () => {
+        const {currentList} = state
         const requestOptions = {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ list })
+          body: JSON.stringify({ currentList })
       };
-        fetch('http://192.168.1.4:5001/Siri/ReactRecepies', requestOptions)
-        // fetch('http://localhost:3000/groceryList')
+        fetch(config.pi_post_selection, requestOptions)
           .then(response => response.json())
           .then(json => {
-              console.log("JSON LENGTH: ",)
-            setRecepies({
-                ...recepies,
-              groceryList: json.slice(0, -1),
-              selectionComplete: true,
-              price: json[json.length-1]
-            })
+              dispatch({type: "confirm_selection_success", payload: json})
           })
           .catch(function() {
             console.log("error")
@@ -47,29 +78,24 @@ function Recepies(props) {
       }
     const addToList = (recept, selected) => {
         if(selected){
-            list.splice(recept, 1)
+            dispatch({type: "remove_from_list", payload: recept})
+            
         }else{
-            list.push(recept)
+            dispatch({type: "add_to_list", payload: recept})
         }        
     }
     
     useEffect(() => {
-        setRecepies({done: false});
-        fetch("http://192.168.1.4:5001/Siri/Recepies")
-        // fetch("http://localhost:3000/recepies")
+        fetch(config.pi_get_recepies)
         .then(response => response.json())
         .then(json => {
-            setRecepies({
-                recepiesList: json,
-                done: true    
-            })
+            dispatch({type: 'initialize_success',  payload: json})
         })
         .catch(function() {
             console.log("error")
         })
     }, [])
-
-    const {recepiesList, done, selectionComplete, groceryList, price} = recepies;
+    const {done,selectionComplete, recepiesList, price, groceryList } = state
     return (
         <React.Fragment>
                 <div>
@@ -101,7 +127,7 @@ function Recepies(props) {
                                 <div>
                                     <h1>Uppskattad kostnad: {price}kr</h1>
                                     {groceryList.map((grocery, index) => (
-                                    <h1>{grocery}</h1>
+                                    <h1 key={index}>{grocery}</h1>
                                     ))}                    
                                 </div>
                             )}
