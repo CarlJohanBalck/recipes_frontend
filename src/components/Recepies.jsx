@@ -12,8 +12,8 @@ const initialState = {
     selectionComplete: false,
     recepiesList: [],
     groceryList: [],
-    selectionList: [],
-    currentList: []
+    currentList: [],
+    totalPrice: 0
 }
 
 function reducer(state, action) {
@@ -35,7 +35,8 @@ function reducer(state, action) {
     case 'add_to_list':
         return {
             ...state,
-            currentList: [...state.currentList, action.payload]
+            currentList: [...state.currentList, action.payload],
+            totalPrice: state.totalPrice + action.payload[action.payload.length-1]
         };
     case 'remove_from_list':
         return {
@@ -75,7 +76,6 @@ function Recepies(props) {
         })
       }
     const addToList = (recept, selected) => {
-        console.log("ADD TO LIST----")
         selected ? dispatch({type: "remove_from_list", payload: recept}) : dispatch({type: "add_to_list", payload: recept})
     }
     
@@ -89,9 +89,10 @@ function Recepies(props) {
             console.log("error")
         })
     }, [])
-    const {done, selectionComplete, recepiesList, price, groceryList, currentList } = state
+    const { done, selectionComplete, recepiesList, currentList, groceryList, totalPrice } = state
 
-    let itemListTest = recepiesList.map((recept, index)=>{
+
+    let recepiesListRender = recepiesList.map((recept, index)=>{
         return(
             <Card
                 onClick={(recept, selected) => addToList(recept, selected)}
@@ -117,10 +118,16 @@ function Recepies(props) {
                         <FadeIn>
                             {!selectionComplete ? (
                                 <div className="container">
-                                    <h3 className="center">Recept</h3>
+                                    <h3 className="center">Receptlista</h3>
                                     <div className="box">
-                                    {itemListTest}
+                                    {recepiesListRender}
                                 </div>
+                                    <h3>Total kostnad: {totalPrice}kr</h3>
+                                    <ul className="collection">
+                                    {currentList.map((recepie, index) => (
+                                    <li className="collection-item">{recepie[0].replace(/ *\([^)]*\) */g, "").slice(0, -1)}</li>
+                                    ))}  
+                                    </ul>
                                     <button class="btn waves-effect waves-light" type="submit" name="action" onClick={confirmSelection}>Bekräfta inköpslista
                                         <i class="material-icons right">send</i>
                                     </button>
@@ -128,7 +135,6 @@ function Recepies(props) {
                             ) : (
 
                                 <div>
-                                    <h1>Uppskattad kostnad: {price}kr</h1>
                                     {groceryList.map((grocery, index) => (
                                     <h1 key={index}>{grocery}</h1>
                                     ))}                    
