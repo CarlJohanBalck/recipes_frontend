@@ -17,13 +17,13 @@ const Card = ({recepie, index, onClick}) => {
     setCard({selected: selected ? false : true});
     onClick(recept, selected)
     }
-  const {selected, cardColor} = card
+  const {selected} = card
   let operation = selected ? "remove" : "add"
   let buttonColor = selected ? "btn-floating halfway-fab waves-effect waves-light red" : "btn-floating halfway-fab waves-effect waves-light green"
   return (
     <div className="card" key={recepie.id}>
         <div className="card-image">
-          <div class="fade"/>
+          <div className="fade"/>
             <img src={genericfood} alt=''/>            
             <span className="card-title">{recepie[0].replace(/ *\([^)]*\) */g, "").slice(0, -1)}</span>
             <span to="/" className={buttonColor} onClick={() => handleClick(recepie, selected)}><i className="material-icons">{operation}</i></span>

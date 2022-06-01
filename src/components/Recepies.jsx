@@ -1,7 +1,9 @@
 import React, {useEffect, useReducer} from 'react';
 import Lottie from "react-lottie";
 import FadeIn from "react-fade-in";
-import * as imageLoader from '../assets/prepare-food.json';
+import * as loading from '../assets/prepare-food.json';
+import * as download from '../assets/download.json';
+
 import Card from './Card'
 var config = require('../config');
 
@@ -28,12 +30,15 @@ function reducer(state, action) {
 
         };
     case 'confirm_selection_success':
+        const groceryListResult = action.payload;
+        const currentList = state.currentList;
+        downloadLists(groceryListResult, currentList)
         return {
             ...state,
-            groceryList: action.payload.slice(0, -1),
+            groceryList: groceryListResult.slice(0, -1),
             selectionComplete: true,
-            price: action.payload[action.payload.length-1]
-        };
+            price: groceryListResult[groceryListResult.length-1]};
+            
     case 'add_to_list':
         return {
             ...state,
@@ -51,17 +56,51 @@ function reducer(state, action) {
     }
   }
 
+const downloadLists = (groceryList, dishList) => {
+    let tempDishList = []
+    dishList.map((recepie, index) => {
+        tempDishList.push(recepie[0].replace(/ *\([^)]*\) */g, "").slice(0, -1))
+    })
+        let groceryString  = groceryList.join('\r\n');
+    let dishListString = tempDishList.join('\r\n');
+    const current = new Date();
+    const date = `${current.getDate()}/${current.getMonth()+1}`;
+
+    const element = document.createElement("a");
+    const file = new Blob([groceryString], {type: "text/plain"});
+    element.href = URL.createObjectURL(file);
+    element.download = "groceryList_"+ date + ".txt";
+    document.body.appendChild(element);
+    element.click();
+
+    const element2 = document.createElement("a");
+    const file2 = new Blob([dishListString], {type: "text/plain"});
+    element2.href = URL.createObjectURL(file2);
+    element2.download = "dishList_"+ date + ".txt";
+    document.body.appendChild(element2);
+    element2.click();
+}
+
 function Recepies(props) {
     const [state, dispatch] = useReducer(reducer, initialState);
     
-    const defaultOptions = {
+    const loadingConfig = {
         loop: true,
         autoplay: true,
-        animationData: imageLoader.default,
+        animationData: loading.default,
         rendererSettings: {
             preserveAspectRatio: "xMidYMid slice"
         }
     }
+    const completeConfig = {
+        loop: false,
+        autoplay: true,
+        animationData: download.default,
+        rendererSettings: {
+            preserveAspectRatio: "xMidYMid slice"
+        }
+    }
+    
     const confirmSelection = () => {
         const {currentList} = state
         const requestOptions = {
@@ -105,6 +144,7 @@ function Recepies(props) {
             />
         )
     })
+    let buttonStatus = currentList.length > 0 ? false : true;
    
      
     return (
@@ -112,10 +152,10 @@ function Recepies(props) {
                 <div>
                     {!done ? (
                         <FadeIn>
-                            <div className="lottie">
+                            <div className="center">
                                 <h2>Hämtar recept från Raspberry Pi</h2>
+                                <Lottie options={loadingConfig} height="25%" width="25%"/>
                             </div>
-                            <Lottie options={defaultOptions} height={241} width={352} />
                         </FadeIn>
                     ) : (
                         <FadeIn>
@@ -128,20 +168,21 @@ function Recepies(props) {
                                     <h3>Total kostnad: {totalPrice}kr</h3>
                                     <ul className="collection">
                                     {currentList.map((recepie, index) => (
-                                    <li className="collection-item">{recepie[0].replace(/ *\([^)]*\) */g, "").slice(0, -1)}</li>
+                                    <li key={index} className="collection-item">{recepie[0].replace(/ *\([^)]*\) */g, "").slice(0, -1)}</li>
                                     ))}  
                                     </ul>
-                                    <button class="btn waves-effect waves-light" type="submit" name="action" onClick={confirmSelection}>Bekräfta inköpslista
-                                        <i class="material-icons right">send</i>
+                                    <button disabled={buttonStatus} className="btn waves-effect waves-light" type="submit" name="action" onClick={confirmSelection}>Bekräfta inköpslista
+                                        <i className="material-icons right">send</i>
                                     </button>
                                 </div>
                             ) : (
 
-                                <div>
-                                    {groceryList.map((grocery, index) => (
-                                    <h1 key={index}>{grocery}</h1>
-                                    ))}                    
-                                </div>
+                                <FadeIn>
+                                    <div className="center">
+                                        <h2>Laddar ner inköpslista och matlista...</h2>
+                                        <Lottie options={completeConfig} height="25%" width="25%"/>
+                                    </div>
+                                </FadeIn>
                             )}
                         </FadeIn>
                     )}
