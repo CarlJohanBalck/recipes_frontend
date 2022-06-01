@@ -24,10 +24,7 @@ code {
 .card{
   width: 300px;
 }
-.card-selected{
-  width: 300px;
-  background-color: green;
-}
+
 .card .card-image .card-title{
   color: black;
   font-weight: 400;

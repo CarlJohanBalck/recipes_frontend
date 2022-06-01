@@ -41,7 +41,8 @@ function reducer(state, action) {
     case 'remove_from_list':
         return {
             ...state,
-            currentList: [...state.currentList.slice(1)]
+            currentList: [...state.currentList.slice(1)],
+            totalPrice: state.totalPrice > 0 ? state.totalPrice - action.payload[action.payload.length-1]: 0,
         };
       default:
         throw new Error();
