@@ -19,9 +19,11 @@ const initialState = {
 function reducer(state, action) {
     switch (action.type) {
       case 'initialize_success':
+        const shuffle = arr => [...arr].sort(() => Math.random() - 0.5);
+        const recepiesList = shuffle(action.payload);
         return {
             ...state,
-            recepiesList: action.payload,
+            recepiesList,
             done: true
 
         };
