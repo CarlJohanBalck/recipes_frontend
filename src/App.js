@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
-import {BrowserRouter} from 'react-router-dom'
+import {BrowserRouter, Route, Routes} from 'react-router-dom'
 import Recepies from './components/Recepies';
+import Navbar from './components/Navbar';
 
 class App extends Component {
   render(){
     return (
       <BrowserRouter>
         <div className="App">
-          <Recepies/>
+          <Navbar/>
+          <Routes>
+            <Route exact path="/" element={<Recepies />}/>
+          </Routes>
         </div>
       </BrowserRouter>
     );

@@ -161,7 +161,6 @@ function Recepies(props) {
                         <FadeIn>
                             {!selectionComplete ? (
                                 <div className="container">
-                                    <h3 className="center">Receptlista</h3>
                                     <div className="box">
                                     {recepiesListRender}
                                 </div>
