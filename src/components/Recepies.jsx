@@ -15,6 +15,7 @@ const initialState = {
     recepiesList: [],
     groceryList: [],
     currentList: [],
+    idList: [],
     totalPrice: 0
 }
 
@@ -35,7 +36,7 @@ function reducer(state, action) {
         downloadLists(groceryListResult, currentList)
         return {
             ...state,
-            groceryList: groceryListResult.slice(0, -1),
+            groceryList: groceryListResult,
             selectionComplete: true,
             price: groceryListResult[groceryListResult.length-1]};
             
@@ -43,12 +44,14 @@ function reducer(state, action) {
         return {
             ...state,
             currentList: [...state.currentList, action.payload],
+            idList: [...state.idList, action.payload[1]],
             totalPrice: state.totalPrice + action.payload[action.payload.length-1]
         };
     case 'remove_from_list':
         return {
             ...state,
             currentList: [...state.currentList.slice(1)],
+            idList: [...state.idList.slice(1)],
             totalPrice: state.totalPrice > 0 ? state.totalPrice - action.payload[action.payload.length-1]: 0,
         };
       default:
@@ -102,11 +105,12 @@ function Recepies(props) {
     }
     
     const confirmSelection = () => {
-        const {currentList} = state
+        const {idList} = state
+        console.log("ID LIST: ", idList)
         const requestOptions = {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ currentList })
+          body: JSON.stringify({ idList })
       };
         fetch(config.pi_post_selection, requestOptions)
           .then(response => response.json())
@@ -117,8 +121,8 @@ function Recepies(props) {
             console.log("error")
         })
       }
-    const addToList = (recept, selected) => {
-        selected ? dispatch({type: "remove_from_list", payload: recept}) : dispatch({type: "add_to_list", payload: recept})
+    const addToList = (recepie, selected) => {
+        selected ? dispatch({type: "remove_from_list", payload: recepie}) : dispatch({type: "add_to_list", payload: recepie})
     }
     
     useEffect(() => {
@@ -134,12 +138,12 @@ function Recepies(props) {
     const { done, selectionComplete, recepiesList, currentList, groceryList, totalPrice } = state
 
 
-    let recepiesListRender = recepiesList.map((recept, index)=>{
+    let recepiesListRender = recepiesList.map((recepie, index)=>{
         return(
             <Card
-                onClick={(recept, selected) => addToList(recept, selected)}
+                onClick={(recepie, selected) => addToList(recepie, selected)}
                 key={index}
-                recepie={recept}
+                recepie={recepie}
                 index={index}
             />
         )
@@ -153,7 +157,7 @@ function Recepies(props) {
                     {!done ? (
                         <FadeIn>
                             <div className="center">
-                                <h2>Hämtar recept från Raspberry Pi</h2>
+                                <h2>Hämtar recepie från Raspberry Pi</h2>
                                 <Lottie options={loadingConfig} height="25%" width="25%"/>
                             </div>
                         </FadeIn>
@@ -164,10 +168,10 @@ function Recepies(props) {
                                     <div className="box">
                                     {recepiesListRender}
                                 </div>
-                                    <h3>Total kostnad: {totalPrice}kr</h3>
+                                    {/* <h3>Total kostnad: {totalPrice}kr</h3> */}
                                     <ul className="collection">
                                     {currentList.map((recepie, index) => (
-                                    <li key={index} className="collection-item">{recepie[0].replace(/ *\([^)]*\) */g, "").slice(0, -1)}</li>
+                                    <li key={index} className="collection-item">{recepie[0]}</li>
                                     ))}  
                                     </ul>
                                     <button disabled={buttonStatus} className="btn waves-effect waves-light" type="submit" name="action" onClick={confirmSelection}>Bekräfta inköpslista

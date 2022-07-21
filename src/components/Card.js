@@ -25,13 +25,13 @@ const Card = ({recepie, index, onClick}) => {
         <div className="card-image">
           <div className="fade"/>
             <img src={genericfood} alt=''/>            
-            <span className="card-title">{recepie[0].replace(/ *\([^)]*\) */g, "").slice(0, -1)}</span>
+            <span className="card-title">{recepie[0]}</span>
             <span to="/" className={buttonColor} onClick={() => handleClick(recepie, selected)}><i className="material-icons">{operation}</i></span>
         </div>
 
         <div className='card-content'>
             <p>{recepie.desc}</p>
-            <p><b>Pris: {recepie[recepie.length-1]}kr</b></p>
+            <p><b>Pris: kr</b></p>
         </div>
       </div>
   );
