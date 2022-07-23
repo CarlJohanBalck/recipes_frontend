@@ -25,7 +25,7 @@ const Card = ({recepie, index, onClick}) => {
         <div className="card-image">
           <div className="fade"/>
             <img src={genericfood} alt=''/>            
-            <span className="card-title">{recepie[0]}</span>
+            <span className="card-title">{recepie[1]}</span>
             <span to="/" className={buttonColor} onClick={() => handleClick(recepie, selected)}><i className="material-icons">{operation}</i></span>
         </div>
 

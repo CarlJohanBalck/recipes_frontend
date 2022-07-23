@@ -44,7 +44,7 @@ function reducer(state, action) {
         return {
             ...state,
             currentList: [...state.currentList, action.payload],
-            idList: [...state.idList, action.payload[1]],
+            idList: [...state.idList, action.payload[0]],
             totalPrice: state.totalPrice + action.payload[action.payload.length-1]
         };
     case 'remove_from_list':
@@ -106,7 +106,6 @@ function Recepies(props) {
     
     const confirmSelection = () => {
         const {idList} = state
-        console.log("ID LIST: ", idList)
         const requestOptions = {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -168,10 +167,10 @@ function Recepies(props) {
                                     <div className="box">
                                     {recepiesListRender}
                                 </div>
-                                    {/* <h3>Total kostnad: {totalPrice}kr</h3> */}
+                                    <h3>Total kostnad: kr</h3>
                                     <ul className="collection">
                                     {currentList.map((recepie, index) => (
-                                    <li key={index} className="collection-item">{recepie[0]}</li>
+                                        <li key={index} className="collection-item">{recepie[1]}</li>
                                     ))}  
                                     </ul>
                                     <button disabled={buttonStatus} className="btn waves-effect waves-light" type="submit" name="action" onClick={confirmSelection}>Bekräfta inköpslista
