@@ -43,7 +43,7 @@ function reducer(state, action) {
     case 'add_to_list':
         return {
             ...state,
-            currentList: [...state.currentList, action.payload],
+            currentList: [...state.currentList, action.payload.slice(1,-1)],
             idList: [...state.idList, action.payload[0]],
             totalPrice: state.totalPrice + action.payload[action.payload.length-1]
         };
