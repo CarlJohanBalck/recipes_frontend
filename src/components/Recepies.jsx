@@ -5,6 +5,7 @@ import * as loading from '../assets/prepare-food.json';
 import * as download from '../assets/download.json';
 
 import Card from './Card'
+import { current } from '@reduxjs/toolkit';
 var config = require('../config');
 
 
@@ -24,6 +25,7 @@ function reducer(state, action) {
       case 'initialize_success':
         const shuffle = arr => [...arr].sort(() => Math.random() - 0.5);
         const recepiesList = shuffle(action.payload);
+
         return {
             ...state,
             recepiesList,
@@ -60,12 +62,8 @@ function reducer(state, action) {
   }
 
 const downloadLists = (groceryList, dishList) => {
-    let tempDishList = []
-    dishList.map((recepie, index) => {
-        tempDishList.push(recepie[0].replace(/ *\([^)]*\) */g, "").slice(0, -1))
-    })
-        let groceryString  = groceryList.join('\r\n');
-    let dishListString = tempDishList.join('\r\n');
+    let groceryString  = groceryList.join('\r\n');
+    let dishListString = dishList.join('\r\n');
     const current = new Date();
     const date = `${current.getDate()}/${current.getMonth()+1}`;
 
@@ -120,35 +118,38 @@ function Recepies(props) {
             console.log("error")
         })
       }
-    const addToList = (recepie, selected) => {
-        selected ? dispatch({type: "remove_from_list", payload: recepie}) : dispatch({type: "add_to_list", payload: recepie})
+    const addToList = (recipe, selected) => {
+        selected ? dispatch({type: "remove_from_list", payload: recipe}) : dispatch({type: "add_to_list", payload: recipe})
     }
     
     useEffect(() => {
         fetch(config.pi_get_recepies)
         .then(response => response.json())
         .then(json => {
+            console.log("USE EFFECT: ", json)
             dispatch({type: 'initialize_success',  payload: json})
         })
         .catch(function() {
             console.log("error")
         })
     }, [])
-    const { done, selectionComplete, recepiesList, currentList, groceryList, totalPrice } = state
+    const { done, selectionComplete, recepiesList, currentList, totalPrice } = state
+
+    console.log("TOTAL PRICE", totalPrice)
 
 
-    let recepiesListRender = recepiesList.map((recepie, index)=>{
+    let recepiesListRender = recepiesList.map((recipe, index)=>{
         return(
             <Card
-                onClick={(recepie, selected) => addToList(recepie, selected)}
+                onClick={(recipe, selected) => addToList(recipe, selected)}
                 key={index}
-                recepie={recepie}
+                recipe={recipe}
                 index={index}
             />
         )
     })
     let buttonStatus = currentList.length > 0 ? false : true;
-   
+
      
     return (
         <React.Fragment>
@@ -156,7 +157,7 @@ function Recepies(props) {
                     {!done ? (
                         <FadeIn>
                             <div className="center">
-                                <h2>Hämtar recepie från Raspberry Pi</h2>
+                                <h2>Hämtar recept från Raspberry Pi</h2>
                                 <Lottie options={loadingConfig} height="25%" width="25%"/>
                             </div>
                         </FadeIn>
@@ -167,10 +168,10 @@ function Recepies(props) {
                                     <div className="box">
                                     {recepiesListRender}
                                 </div>
-                                    <h3>Total kostnad: kr</h3>
+                                    <h3>Total kostnad: {totalPrice}kr</h3>
                                     <ul className="collection">
-                                    {currentList.map((recepie, index) => (
-                                        <li key={index} className="collection-item">{recepie[1]}</li>
+                                    {currentList.map((recipe, index) => (
+                                        <li key={index} className="collection-item">{recipe[1]}</li>
                                     ))}  
                                     </ul>
                                     <button disabled={buttonStatus} className="btn waves-effect waves-light" type="submit" name="action" onClick={confirmSelection}>Bekräfta inköpslista
