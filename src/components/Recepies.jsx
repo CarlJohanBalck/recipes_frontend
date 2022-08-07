@@ -5,7 +5,6 @@ import * as loading from '../assets/prepare-food.json';
 import * as download from '../assets/download.json';
 
 import Card from './Card'
-import { current } from '@reduxjs/toolkit';
 var config = require('../config');
 
 
@@ -47,14 +46,14 @@ function reducer(state, action) {
             ...state,
             currentList: [...state.currentList, action.payload.slice(1,-1)],
             idList: [...state.idList, action.payload[0]],
-            totalPrice: state.totalPrice + action.payload[action.payload.length-1]
+            totalPrice: state.totalPrice + action.payload[action.payload.length-2]
         };
     case 'remove_from_list':
         return {
             ...state,
             currentList: [...state.currentList.slice(1)],
             idList: [...state.idList.slice(1)],
-            totalPrice: state.totalPrice > 0 ? state.totalPrice - action.payload[action.payload.length-1]: 0,
+            totalPrice: state.totalPrice > 0 ? state.totalPrice - action.payload[action.payload.length-2]: 0,
         };
       default:
         throw new Error();
@@ -126,7 +125,6 @@ function Recepies(props) {
         fetch(config.pi_get_recepies)
         .then(response => response.json())
         .then(json => {
-            console.log("USE EFFECT: ", json)
             dispatch({type: 'initialize_success',  payload: json})
         })
         .catch(function() {
@@ -135,7 +133,6 @@ function Recepies(props) {
     }, [])
     const { done, selectionComplete, recepiesList, currentList, totalPrice } = state
 
-    console.log("TOTAL PRICE", totalPrice)
 
 
     let recepiesListRender = recepiesList.map((recipe, index)=>{
@@ -157,7 +154,7 @@ function Recepies(props) {
                     {!done ? (
                         <FadeIn>
                             <div className="center">
-                                <h2>Hämtar recept från Raspberry Pi</h2>
+                                <h2>Hämtar recept från databas</h2>
                                 <Lottie options={loadingConfig} height="25%" width="25%"/>
                             </div>
                         </FadeIn>
