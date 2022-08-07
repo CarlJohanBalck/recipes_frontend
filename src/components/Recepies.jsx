@@ -171,7 +171,7 @@ function Recepies(props) {
                                     <h3>Total kostnad: {totalPrice}kr</h3>
                                     <ul className="collection">
                                     {currentList.map((recipe, index) => (
-                                        <li key={index} className="collection-item">{recipe[1]}</li>
+                                        <li key={index} className="collection-item">{recipe[0]}</li>
                                     ))}  
                                     </ul>
                                     <button disabled={buttonStatus} className="btn waves-effect waves-light" type="submit" name="action" onClick={confirmSelection}>Bekräfta inköpslista
