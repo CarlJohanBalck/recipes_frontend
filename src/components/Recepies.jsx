@@ -188,6 +188,7 @@ function Recepies(props) {
                                     <button disabled={buttonStatus} className="btn waves-effect waves-light" type="submit" name="action" onClick={confirmSelection}>Bekräfta inköpslista
                                         <i className="material-icons right">send</i>
                                     </button>
+                                    
                                 </div>
                             )}
                             {selectionInProgress && !selectionComplete && (
