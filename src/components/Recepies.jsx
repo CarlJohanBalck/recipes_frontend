@@ -65,26 +65,7 @@ function reducer(state, action) {
     }
   }
 
-// const downloadLists = (groceryList, dishList) => {
-//     let groceryString  = groceryList.join('\r\n');
-//     let dishListString = dishList.join('\r\n');
-//     const current = new Date();
-//     const date = `${current.getDate()}/${current.getMonth()+1}`;
 
-//     const element = document.createElement("a");
-//     const file = new Blob([groceryString], {type: "text/plain"});
-//     element.href = URL.createObjectURL(file);
-//     element.download = "groceryList_"+ date + ".txt";
-//     document.body.appendChild(element);
-//     element.click();
-
-//     const element2 = document.createElement("a");
-//     const file2 = new Blob([dishListString], {type: "text/plain"});
-//     element2.href = URL.createObjectURL(file2);
-//     element2.download = "dishList_"+ date + ".txt";
-//     document.body.appendChild(element2);
-//     element2.click();
-// }
 
 function Recepies(props) {
     const [state, dispatch] = useReducer(reducer, initialState);
@@ -202,7 +183,7 @@ function Recepies(props) {
                              {!selectionInProgress && selectionComplete && (
                                 <FadeIn>
                                     <div className="center">
-                                        <h2>Done!</h2>
+                                        <h2>Klart!</h2>
                                         <Lottie options={completeConfig} height="25%" width="25%"/>
                                     </div>
                                 </FadeIn>

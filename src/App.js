@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {BrowserRouter, Route, Routes} from 'react-router-dom'
 import Recepies from './components/Recepies';
+import AddRecipe from './components/AddRecipe';
 import Navbar from './components/Navbar';
 
 class App extends Component {
@@ -8,9 +9,9 @@ class App extends Component {
     return (
       <BrowserRouter>
         <div className="App">
-          <Navbar/>
+          {/* <Navbar/> */}
           <Routes>
-            <Route exact path="/" element={<Recepies />}/>
+            <Route exact path="/" element={<AddRecipe />}/>
           </Routes>
         </div>
       </BrowserRouter>
