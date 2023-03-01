@@ -1,57 +1,50 @@
 import React, {useState} from 'react';
- const RecipesInput = () => {
-    const [recipeInfo, setRecipeInfo] = useState({
-        recipe_id: "",
-        recipe_name: "",
-        recipe_url: "",
-        recipe_weekend: "",
-        recipe_image_url: "",
-        recipe_instructions: "",
-    });
-    const handleClick = () => {
-       alert(recipeInfo.recipe_id + " " + recipeInfo.recipe_name)
+ const IngredientsInput = ({onClick, ingredients, units}) => {
+    const [ingredientInfo, setIngredientInfo] = useState({});
+
+
+    const handleChange = (event) => {
+        const name = event.target.name;
+        const value = event.target.value;
+        console.log("NAME: ", name, "VALUE: ", value)
+        setIngredientInfo(values => ({...values, [name]: value}))
         }
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        onClick(ingredientInfo)
+    }
+
+    let ingredientsOptions = ingredients.map((ingredients, index)=>{
+        return(
+            <option key={index} value={ingredients[0]}>{ingredients[1]}</option>
+        )
+    })
+
+    let unitsOptions = units.map((units, index)=>{
+        return(
+            <option key={index} value={units[0]}>{units[1]}</option>
+        )
+    })
+
     return(
-        <div class="row">
-            <form class="col s12">
-                <div class="row">
-                <div class="input-field col s6">
-                    <i class="material-icons prefix">account_circle</i>
-                    <input id="icon_prefix" type="tel" class="validate" onChange={e => setRecipeInfo({...recipeInfo, recipe_id: e.target.value})}/>
-                    <label for="icon_prefix">Recept ID</label>
-                    </div>
-                    <div class="input-field col s6">
-                    <i class="material-icons prefix">account_circle</i>
-                    <input id="icon_prefix" type="tel" class="validate" onChange={e => setRecipeInfo({...recipeInfo, recipe_name: e.target.value})}/>
-                    <label for="icon_prefix">Namn på recept</label>
-                    </div>
-                    <div class="input-field col s6">
-                    <i class="material-icons prefix">account_circle</i>
-                    <input id="icon_prefix" type="tel" class="validate" onChange={e => setRecipeInfo({...recipeInfo, recipe_url: e.target.value})}/>
-                    <label for="icon_prefix">Receipe Url</label>
-                    </div>
-                    <div class="input-field col s6">
-                    <i class="material-icons prefix">account_circle</i>
-                    <input id="icon_prefix" type="tel" class="validate" onChange={e => setRecipeInfo({...recipeInfo, recipe_weekend: e.target.value})}/>
-                    <label for="icon_prefix">Helg</label>
-                    </div>
-                    <div class="input-field col s6">
-                    <i class="material-icons prefix">account_circle</i>
-                    <input id="icon_prefix" type="tel" class="validate" onChange={e => setRecipeInfo({...recipeInfo, recipe_image_url: e.target.value})}/>
-                    <label for="icon_prefix">Image URL</label>
-                    </div>
-                    <div class="input-field col s6">
-                    <i class="material-icons prefix">account_circle</i>
-                    <input id="icon_prefix" type="tel" class="validate" onChange={e => setRecipeInfo({...recipeInfo, recipe_instructions: e.target.value})}/>
-                    <label for="icon_prefix">Intructions</label>
-                    </div>
-                    <button disabled={false} className="btn waves-effect waves-light" type="submit" name="action" onClick={handleClick}>Bekräfta recept
-                    <i className="material-icons right">send</i>
-                 </button>
-                </div>
-            </form>
-  </div>
+        <div>
+            <label>Recept Ingrediens ID</label>
+            <input id="icon_prefix" name="recipe_ingredient_id" type="tel" className="validate" onChange={handleChange}/>
+            <label>Recept ID</label>
+            <input id="icon_prefix" name="recipe_id" type="tel" className="validate" onChange={handleChange}/>
+            <label>Mängd</label>
+            <input id="icon_prefix" name="amount" type="tel" className="validate" onChange={handleChange}/>
+            <label>Mått</label>
+            <select class="browser-default" name="unit" onChange={handleChange}>
+                {unitsOptions}
+            </select>
+            <label>Ingrediens</label>
+            <select class="browser-default" name="ingredient" onChange={handleChange}>
+                {ingredientsOptions}
+            </select>
+            <button disabled={false} className="btn waves-effect waves-light" type="submit" name="action" onClick={handleSubmit}>Bekräfta ingredienser</button>
+        </div>
     )
 }
 
-export default RecipesInput;
+export default IngredientsInput;

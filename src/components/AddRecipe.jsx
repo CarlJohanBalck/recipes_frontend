@@ -1,12 +1,9 @@
 import React, {useEffect, useReducer} from 'react';
-import Lottie from "react-lottie";
 import FadeIn from "react-fade-in";
-import * as loading from '../assets/prepare-food.json';
-import * as upload from '../assets/upload.json';
-import * as done_upload from '../assets/done.json';
 
-import Card from './Card'
 import RecipeInput from './RecipeInput'
+import IngredientsInput from './IngredientsInput'
+
 var config = require('../config');
 
 
@@ -16,6 +13,7 @@ const initialState = {
     selectionComplete: false,
     selectionInProgress: false,
     ingredientsList: [],
+    unitsList: [],
     groceryList: [],
     currentList: [],
     recipeInfoList: [],
@@ -25,12 +23,14 @@ const initialState = {
 function reducer(state, action) {
     switch (action.type) {
       case 'initialize_success':
-        const shuffle = arr => [...arr].sort(() => Math.random() - 0.5);
-        const ingredientsList = shuffle(action.payload);
+        const ingredientsList = (action.payloadIngredients);
+        const unitsList = (action.payloadUnits);
+        console.log("UNITS LIST: ", unitsList)
 
         return {
             ...state,
             ingredientsList,
+            unitsList,
             done: true
 
         };
@@ -48,6 +48,11 @@ function reducer(state, action) {
         };
             
     case 'confirm_recipe_progress':
+        return {
+            ...state,
+            recipeInfoList: [...state.recipeInfoList, action.payload],
+        };
+    case 'confirm_ingredient_progress':
         return {
             ...state,
             recipeInfoList: [...state.recipeInfoList, action.payload],
@@ -86,25 +91,60 @@ function AddRecipe(props) {
               console.log("error")
           })
         }
+        
+    const confirmIngredients = (ingredientInfo) => {
+        dispatch({type: "confirm_ingredient_progress", payload: ingredientInfo})
+        console.log("INGREDIENT INFO LIST: ", ingredientInfo)
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ingredientInfo })
+        };
+        fetch(config.pi_post_add_ingredient, requestOptions)
+            .then(response => response.json())
+            .then(json => {
+            console.log("SUCCESS: ", json)
+                dispatch({type: "confirm_selection_success", payload: json})
+            })
+            .catch(function() {
+            console.log("error")
+            })
+        }
 
     
     useEffect(() => {
-        fetch(config.pi_get_recepies)
-        .then(response => response.json())
-        .then(json => {
-            console.log("JSON-----", json)
-            dispatch({type: 'initialize_success',  payload: json})
-        })
-        .catch(function() {
-            console.log("error")
-        })
-    }, [])
+
+        Promise.all([
+            fetch(config.pi_get_ingredients),
+            fetch(config.pi_get_units),
+        ])
+            .then(([resIngredients, resUnits]) => 
+            Promise.all([resIngredients.json(), resUnits.json()])
+            )
+            .then(([dataIngredients, dataUnits]) => {
+                dispatch({type: 'initialize_success',  payloadIngredients: dataIngredients, payloadUnits: dataUnits})
+            });
+        }, []);
+
+    const { done, ingredientsList, unitsList} = state
 
     return (
         <React.Fragment>
             <div>
-                <RecipeInput onClick={(recipeInfo) => confirmRecipe(recipeInfo)}/>
+            {!done ? (
+                <FadeIn>
+                    <div className="center">
+                        <h2>Hämtar ingredienser och enheter från databas</h2>
+                    </div>
+                </FadeIn>
+            ) : (
+                <FadeIn>
+                    <RecipeInput onClick={(recipeInfo) => confirmRecipe(recipeInfo)}/>
+                    <IngredientsInput onClick={(ingredientInfo) => confirmIngredients(ingredientInfo)}  ingredients={ingredientsList} units={unitsList}/>
+                </FadeIn>
+            )}
             </div>
+            
         </React.Fragment>
     );
 }
