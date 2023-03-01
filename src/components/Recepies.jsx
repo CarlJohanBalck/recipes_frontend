@@ -160,7 +160,6 @@ function Recepies(props) {
                                     <div className="box">
                                     {recepiesListRender}
                                 </div>
-                                    <h3>Total kostnad: {totalPrice}kr</h3>
                                     <ul className="collection">
                                     {currentList.map((recipe, index) => (
                                         <li key={index} className="collection-item">{recipe[0]}</li>

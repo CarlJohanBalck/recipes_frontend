@@ -1,7 +1,11 @@
-import React, {useState} from 'react';
- const RecipesInput = ({onClick}) => {
+import React, {useState, useEffect} from 'react';
+ const RecipeInput = ({onClick, lastRecipeId}) => {
     const [recipeInfo, setRecipeInfo] = useState({});
 
+
+    useEffect(() => {
+        setRecipeInfo((values => ({...values, recipe_id: lastRecipeId + 1})))
+    }, []);
 
     const handleChange = (event) => {
         const name = event.target.name;
@@ -19,7 +23,7 @@ import React, {useState} from 'react';
                 <div className="row">
                 <div className="input-field col s6">
                     <i className="material-icons prefix">account_circle</i>
-                    <input id="icon_prefix" value={recipeInfo.recipe_id} name="recipe_id" type="tel" className="validate" onChange={handleChange}/>
+                    <input id="icon_prefix" value={lastRecipeId + 1} name="recipe_id" type="tel" className="validate" onChange={handleChange}/>
                     <label for="icon_prefix">Recept ID</label>
                     </div>
                     <div className="input-field col s6">
@@ -58,4 +62,4 @@ import React, {useState} from 'react';
     )
 }
 
-export default RecipesInput;
+export default RecipeInput;

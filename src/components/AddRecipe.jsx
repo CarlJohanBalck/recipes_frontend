@@ -14,6 +14,10 @@ const initialState = {
     selectionInProgress: false,
     ingredientsList: [],
     unitsList: [],
+    recipesList: [],
+    lastIngredientId: 0,
+    lastRecipeId: 0,
+    lastRecipeIngredientId: 0,
     groceryList: [],
     currentList: [],
     recipeInfoList: [],
@@ -25,11 +29,18 @@ function reducer(state, action) {
       case 'initialize_success':
         const ingredientsList = (action.payloadIngredients);
         const unitsList = (action.payloadUnits);
-        console.log("UNITS LIST: ", unitsList)
+        const recipesList = (action.payloadRecipes);
+        const recipeIngredientsList = (action.payloadRecipeIngredients);
+        const lastRecipeIngredientId = recipeIngredientsList.length
+        const lastRecipeId = recipesList.length
+        const lastIngredientId = ingredientsList.length
 
         return {
             ...state,
             ingredientsList,
+            lastIngredientId,
+            lastRecipeIngredientId,
+            lastRecipeId,
             unitsList,
             done: true
 
@@ -70,7 +81,7 @@ function reducer(state, action) {
   }
 
 
-function AddRecipe(props) {
+function AddRecipe() {
     const [state, dispatch] = useReducer(reducer, initialState);
     
     const confirmRecipe = (recipeInfo) => {
@@ -91,7 +102,7 @@ function AddRecipe(props) {
               console.log("error")
           })
         }
-        
+
     const confirmIngredients = (ingredientInfo) => {
         dispatch({type: "confirm_ingredient_progress", payload: ingredientInfo})
         console.log("INGREDIENT INFO LIST: ", ingredientInfo)
@@ -117,16 +128,18 @@ function AddRecipe(props) {
         Promise.all([
             fetch(config.pi_get_ingredients),
             fetch(config.pi_get_units),
+            fetch(config.pi_get_recepies),
+            fetch(config.pi_get_recipe_ingredients)
         ])
-            .then(([resIngredients, resUnits]) => 
-            Promise.all([resIngredients.json(), resUnits.json()])
+            .then(([resIngredients, resUnits, resRecipes, resRecipeIngredients]) => 
+            Promise.all([resIngredients.json(), resUnits.json(), resRecipes.json(), resRecipeIngredients.json()])
             )
-            .then(([dataIngredients, dataUnits]) => {
-                dispatch({type: 'initialize_success',  payloadIngredients: dataIngredients, payloadUnits: dataUnits})
+            .then(([dataIngredients, dataUnits, dataRecipes, dataRecipeIngredients]) => {
+                dispatch({type: 'initialize_success',  payloadIngredients: dataIngredients, payloadUnits: dataUnits, payloadRecipes: dataRecipes, payloadRecipeIngredients: dataRecipeIngredients})
             });
         }, []);
 
-    const { done, ingredientsList, unitsList} = state
+    const { done, ingredientsList, unitsList, lastRecipeId, lastIngredientId, lastRecipeIngredientId} = state
 
     return (
         <React.Fragment>
@@ -139,8 +152,10 @@ function AddRecipe(props) {
                 </FadeIn>
             ) : (
                 <FadeIn>
-                    <RecipeInput onClick={(recipeInfo) => confirmRecipe(recipeInfo)}/>
-                    <IngredientsInput onClick={(ingredientInfo) => confirmIngredients(ingredientInfo)}  ingredients={ingredientsList} units={unitsList}/>
+                    <h3>Lägg till recept</h3>
+                    <RecipeInput onClick={(recipeInfo) => confirmRecipe(recipeInfo)} lastRecipeId={lastRecipeId}/>
+                    <h3>Lägg till ingredienser</h3>
+                    <IngredientsInput onClick={(ingredientInfo) => confirmIngredients(ingredientInfo)} ingredients={ingredientsList} units={unitsList} lastRecipeId={lastRecipeId} lastIngredientId={lastIngredientId} lastRecipeIngredientId={lastRecipeIngredientId}/>
                 </FadeIn>
             )}
             </div>

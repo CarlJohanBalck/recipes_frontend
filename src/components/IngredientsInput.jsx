@@ -1,7 +1,11 @@
-import React, {useState} from 'react';
- const IngredientsInput = ({onClick, ingredients, units}) => {
+import React, {useState, useEffect} from 'react';
+ const IngredientsInput = ({onClick, ingredients, units, lastRecipeIngredientId, lastRecipeId}) => {
     const [ingredientInfo, setIngredientInfo] = useState({});
 
+    useEffect(() => {
+        setIngredientInfo((values => ({...values, recipe_id: lastRecipeId + 1})))
+        setIngredientInfo((values => ({...values, recipe_ingredient_id: lastRecipeIngredientId + 1})))
+    }, []);
 
     const handleChange = (event) => {
         const name = event.target.name;
@@ -29,9 +33,9 @@ import React, {useState} from 'react';
     return(
         <div>
             <label>Recept Ingrediens ID</label>
-            <input id="icon_prefix" name="recipe_ingredient_id" type="tel" className="validate" onChange={handleChange}/>
+            <input id="icon_prefix" value={lastRecipeIngredientId + 1 } name="recipe_ingredient_id" type="tel" className="validate" onChange={handleChange}/>
             <label>Recept ID</label>
-            <input id="icon_prefix" name="recipe_id" type="tel" className="validate" onChange={handleChange}/>
+            <input value={lastRecipeId + 1 } id="icon_prefix" name="recipe_id" type="tel" className="validate" onChange={handleChange}/>
             <label>Mängd</label>
             <input id="icon_prefix" name="amount" type="tel" className="validate" onChange={handleChange}/>
             <label>Mått</label>
