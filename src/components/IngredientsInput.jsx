@@ -32,10 +32,11 @@ import React, {useState, useEffect} from 'react';
 
     return(
         <div>
+            <h4></h4>
             <label>Recept Ingrediens ID</label>
-            <input id="icon_prefix" value={lastRecipeIngredientId + 1 } name="recipe_ingredient_id" type="tel" className="validate" onChange={handleChange}/>
+            <input id="icon_prefix" value={ingredientInfo.recipe_ingredient_id} name="recipe_ingredient_id" type="tel" className="validate" onChange={handleChange}/>
             <label>Recept ID</label>
-            <input value={lastRecipeId + 1 } id="icon_prefix" name="recipe_id" type="tel" className="validate" onChange={handleChange}/>
+            <input value={ingredientInfo.recipe_id} id="icon_prefix" name="recipe_id" type="tel" className="validate" onChange={handleChange}/>
             <label>Mängd</label>
             <input id="icon_prefix" name="amount" type="tel" className="validate" onChange={handleChange}/>
             <label>Mått</label>

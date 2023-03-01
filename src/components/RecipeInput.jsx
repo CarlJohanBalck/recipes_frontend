@@ -19,11 +19,12 @@ import React, {useState, useEffect} from 'react';
         
     return(
         <div className="row">
+            <h4>Senast recept id: {lastRecipeId}</h4>
             <form className="col s12">
                 <div className="row">
                 <div className="input-field col s6">
                     <i className="material-icons prefix">account_circle</i>
-                    <input id="icon_prefix" value={lastRecipeId + 1} name="recipe_id" type="tel" className="validate" onChange={handleChange}/>
+                    <input id="icon_prefix" value={recipeInfo.recipe_id} name="recipe_id" type="tel" className="validate" onChange={handleChange}/>
                     <label for="icon_prefix">Recept ID</label>
                     </div>
                     <div className="input-field col s6">

@@ -6,7 +6,8 @@ import React from 'react';
         <a href="/" class="brand-logo center">Recept
         </a>
         <ul class="left hide-on-med-and-down">
-          <li class="active"><a href="/addRecipe">Lägg till recept</a></li>
+          <li class="inactive"><a href="/addRecipe">Lägg till recept</a></li>
+          <li class="inactive"><a href="/addIngredients">Lägg till ingredienser</a></li>
         </ul>
       </div>
     </nav>
