@@ -10,7 +10,6 @@ import React, {useState, useEffect} from 'react';
     const handleChange = (event) => {
         const name = event.target.name;
         const value = event.target.value;
-        console.log("NAME: ", name, "VALUE: ", value)
         setIngredientInfo(values => ({...values, [name]: value}))
         }
     const handleSubmit = (event) => {
@@ -30,22 +29,25 @@ import React, {useState, useEffect} from 'react';
         )
     })
 
+
     return(
             <div className="row">
-                <label>Recept Ingrediens ID</label>
-                <input id="icon_prefix" value={ingredientInfo.recipe_ingredient_id} name="recipe_ingredient_id" type="tel" className="validate" onChange={handleChange}/>
-                <label>Recept ID</label>
-                <input value={ingredientInfo.recipe_id} id="icon_prefix" name="recipe_id" type="tel" className="validate" onChange={handleChange}/>
+                <h3>Lägg till ingredienser</h3>
+                <div className="input-field col">
                 <label>Mängd</label>
                 <input id="icon_prefix" name="amount" type="tel" className="validate" onChange={handleChange}/>
-                <label>Mått</label>
+                </div>
+                <div className="input-field col">
                 <select className="browser-default" name="unit" onChange={handleChange}>
                     {unitsOptions}
                 </select>
-                <label>Ingrediens</label>
+                </div>
+                <div className="input-field col">
+                
                 <select class="browser-default" name="ingredient" onChange={handleChange}>
                     {ingredientsOptions}
                 </select>
+                </div>
                 <button disabled={false} className="btn waves-effect waves-light" type="submit" name="action" onClick={handleSubmit}>Bekräfta ingrediens
                     {!isLoading && !isDone && !isDone && !isFailure && (
                         <i className="material-icons right">send</i> 
@@ -60,6 +62,8 @@ import React, {useState, useEffect} from 'react';
                         <i className="material-icons right">check</i>
                     )}
                 </button>
+             
+                
             </div>
     )
 }

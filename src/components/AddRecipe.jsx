@@ -38,6 +38,7 @@ function reducer(state, action) {
         const recipesList = (action.payloadRecipes);
         const recipeIngredientsList = (action.payloadRecipeIngredients);
         const lastRecipeIngredientId = recipeIngredientsList.length
+        console.log("SETS LAST RECIPE INGREDIENT ID------", lastRecipeIngredientId)
         const lastRecipeId = recipesList.length
         const lastIngredientId = ingredientsList.length
 
@@ -191,7 +192,6 @@ function AddRecipe() {
             ) : (
                 <FadeIn>
                     <div>
-                      
                         <RecipeInput isFailure={addRecipeFailure} databaseError={databaseErrorAddRecipe} isLoading={addRecipeProgress} isDone={addRecipeDone} onClick={(recipeInfo) => confirmRecipe(recipeInfo)} lastRecipeId={lastRecipeId}/>
                         <IngredientsInput isFailure={addIngredientFailure} databaseError={databaseErrorAddIngredient} isLoading={addIngredientProgress} isDone={addIngredientDone} onClick={(ingredientInfo) => confirmIngredients(ingredientInfo)} ingredients={ingredientsList} units={unitsList} lastRecipeId={lastRecipeId} lastIngredientId={lastIngredientId} lastRecipeIngredientId={lastRecipeIngredientId}/>
                     </div>
