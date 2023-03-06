@@ -27,7 +27,6 @@ const Card = ({recipe, index, onClick}) => {
 
         <div className='card-content'>
             <p>{recipe.desc}</p>
-            <p><b>Pris: {recipe[recipe.length-2]}kr</b></p>
         </div>
       </div>
   );

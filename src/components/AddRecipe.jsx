@@ -9,9 +9,15 @@ var config = require('../config');
 
 const initialState = {
     done: false,
+    addRecipeProgress: false,
+    addRecipeDone: false,
+    addRecipeFailure: false,
+    addIngredientProgress: false,
+    addIngredientDone: false,
+    addIngredientFailure: false,
+    databaseErrorAddRecipe: "",
+    databaseErrorAddIngredient: "",
     selected: false,
-    selectionComplete: false,
-    selectionInProgress: false,
     ingredientsList: [],
     unitsList: [],
     recipesList: [],
@@ -45,27 +51,43 @@ function reducer(state, action) {
             done: true
 
         };
-    case 'confirm_selection_in_progress':
-        return {
-            ...state,
-            selectionInProgress: true
-        }
                 
-    case 'confirm_selection_success':
+    case 'confirm_recipe_success':
         return {
             ...state,
-            selectionComplete: true,
-            selectionInProgress: false,
+            addRecipeProgress: false,
+            addRecipeDone: true,
+        };
+    case 'confirm_recipe_failure':
+        return {
+            ...state,
+            addRecipeFailure: true,
+            addRecipeProgress: false,
+            databaseErrorAddRecipe: action.payload
+        };
+    case 'confirm_ingredient_success':
+        return {
+            ...state,
+            addIngredientProgress: false,
+            addIngredientDone: true,
+        };
+    case 'confirm_ingredient_failure':
+        return {
+            ...state,
+            addIngredientProgress: false,
+            addIngredientFailure: true,
         };
             
     case 'confirm_recipe_progress':
         return {
             ...state,
+            addRecipeProgress: true,
             recipeInfoList: [...state.recipeInfoList, action.payload],
         };
     case 'confirm_ingredient_progress':
         return {
             ...state,
+            addIngredientProgress: true,
             recipeInfoList: [...state.recipeInfoList, action.payload],
         };
     case 'remove_from_list':
@@ -95,13 +117,30 @@ function AddRecipe() {
           fetch(config.pi_post_add_recipe, requestOptions)
             .then(response => response.json())
             .then(json => {
-              console.log("SUCCESS: ", json)
-                dispatch({type: "confirm_selection_success", payload: json})
+                handleDatabaseResponseAddRecipe(json)
             })
             .catch(function() {
               console.log("error")
           })
         }
+    const handleDatabaseResponseAddRecipe = (json) => {
+        console.log("RESONSE: ", json)
+        if (json == "200") {
+            dispatch({type: "confirm_recipe_success"})
+        } else {
+            dispatch({type: "confirm_recipe_failure", payload: json})
+        }
+
+    }
+    const handleDatabaseResponseAddIngredient = (json) => {
+        console.log("ADD INGREDIENT RESONSE: ", json)
+        if (json == "200") {
+            dispatch({type: "confirm_ingredient_success"})
+        } else {
+            dispatch({type: "confirm_ingredient_failure", payload: json})
+        }
+
+    }
 
     const confirmIngredients = (ingredientInfo) => {
         dispatch({type: "confirm_ingredient_progress", payload: ingredientInfo})
@@ -114,8 +153,7 @@ function AddRecipe() {
         fetch(config.pi_post_add_ingredient, requestOptions)
             .then(response => response.json())
             .then(json => {
-            console.log("SUCCESS: ", json)
-                dispatch({type: "confirm_selection_success", payload: json})
+                handleDatabaseResponseAddIngredient(json)
             })
             .catch(function() {
             console.log("error")
@@ -139,7 +177,7 @@ function AddRecipe() {
             });
         }, []);
 
-    const { done, ingredientsList, unitsList, lastRecipeId, lastIngredientId, lastRecipeIngredientId} = state
+    const { done, ingredientsList, unitsList, lastRecipeId, lastIngredientId, lastRecipeIngredientId, addRecipeProgress, addRecipeDone, addRecipeFailure, databaseErrorAddRecipe, addIngredientFailure, databaseErrorAddIngredient, addIngredientProgress, addIngredientDone} = state
 
     return (
         <React.Fragment>
@@ -152,10 +190,11 @@ function AddRecipe() {
                 </FadeIn>
             ) : (
                 <FadeIn>
-                    <h3>Lägg till recept</h3>
-                    <RecipeInput onClick={(recipeInfo) => confirmRecipe(recipeInfo)} lastRecipeId={lastRecipeId}/>
-                    <h3>Lägg till ingredienser</h3>
-                    <IngredientsInput onClick={(ingredientInfo) => confirmIngredients(ingredientInfo)} ingredients={ingredientsList} units={unitsList} lastRecipeId={lastRecipeId} lastIngredientId={lastIngredientId} lastRecipeIngredientId={lastRecipeIngredientId}/>
+                    <div>
+                      
+                        <RecipeInput isFailure={addRecipeFailure} databaseError={databaseErrorAddRecipe} isLoading={addRecipeProgress} isDone={addRecipeDone} onClick={(recipeInfo) => confirmRecipe(recipeInfo)} lastRecipeId={lastRecipeId}/>
+                        <IngredientsInput isFailure={addIngredientFailure} databaseError={databaseErrorAddIngredient} isLoading={addIngredientProgress} isDone={addIngredientDone} onClick={(ingredientInfo) => confirmIngredients(ingredientInfo)} ingredients={ingredientsList} units={unitsList} lastRecipeId={lastRecipeId} lastIngredientId={lastIngredientId} lastRecipeIngredientId={lastRecipeIngredientId}/>
+                    </div>
                 </FadeIn>
             )}
             </div>

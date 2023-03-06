@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
- const IngredientsInput = ({onClick, ingredients, units, lastRecipeIngredientId, lastRecipeId}) => {
+ const IngredientsInput = ({isFailure, databaseError, isLoading, isDone, onClick, ingredients, units, lastRecipeIngredientId, lastRecipeId}) => {
     const [ingredientInfo, setIngredientInfo] = useState({});
 
     useEffect(() => {
@@ -31,24 +31,36 @@ import React, {useState, useEffect} from 'react';
     })
 
     return(
-        <div>
-            <h4></h4>
-            <label>Recept Ingrediens ID</label>
-            <input id="icon_prefix" value={ingredientInfo.recipe_ingredient_id} name="recipe_ingredient_id" type="tel" className="validate" onChange={handleChange}/>
-            <label>Recept ID</label>
-            <input value={ingredientInfo.recipe_id} id="icon_prefix" name="recipe_id" type="tel" className="validate" onChange={handleChange}/>
-            <label>Mängd</label>
-            <input id="icon_prefix" name="amount" type="tel" className="validate" onChange={handleChange}/>
-            <label>Mått</label>
-            <select class="browser-default" name="unit" onChange={handleChange}>
-                {unitsOptions}
-            </select>
-            <label>Ingrediens</label>
-            <select class="browser-default" name="ingredient" onChange={handleChange}>
-                {ingredientsOptions}
-            </select>
-            <button disabled={false} className="btn waves-effect waves-light" type="submit" name="action" onClick={handleSubmit}>Bekräfta ingredienser</button>
-        </div>
+            <div className="row">
+                <label>Recept Ingrediens ID</label>
+                <input id="icon_prefix" value={ingredientInfo.recipe_ingredient_id} name="recipe_ingredient_id" type="tel" className="validate" onChange={handleChange}/>
+                <label>Recept ID</label>
+                <input value={ingredientInfo.recipe_id} id="icon_prefix" name="recipe_id" type="tel" className="validate" onChange={handleChange}/>
+                <label>Mängd</label>
+                <input id="icon_prefix" name="amount" type="tel" className="validate" onChange={handleChange}/>
+                <label>Mått</label>
+                <select className="browser-default" name="unit" onChange={handleChange}>
+                    {unitsOptions}
+                </select>
+                <label>Ingrediens</label>
+                <select class="browser-default" name="ingredient" onChange={handleChange}>
+                    {ingredientsOptions}
+                </select>
+                <button disabled={false} className="btn waves-effect waves-light" type="submit" name="action" onClick={handleSubmit}>Bekräfta ingrediens
+                    {!isLoading && !isDone && !isDone && !isFailure && (
+                        <i className="material-icons right">send</i> 
+                    )}
+                    {isLoading && (
+                        <i className="material-icons right">loop</i>
+                    )}
+                    {isFailure && (
+                        <i className="material-icons right">error</i>
+                    )}
+                    {isDone && (
+                        <i className="material-icons right">check</i>
+                    )}
+                </button>
+            </div>
     )
 }
 

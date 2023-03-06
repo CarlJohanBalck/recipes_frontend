@@ -14,7 +14,6 @@ class App extends Component {
           <Routes>
             <Route exact path="/" element={<Recepies />}/>
             <Route exact path="/addRecipe" element={<AddRecipe />}/>
-            <Route exact path="/addIngredients" element={<AddIngredients />}/>
           </Routes>
         </div>
       </BrowserRouter>
