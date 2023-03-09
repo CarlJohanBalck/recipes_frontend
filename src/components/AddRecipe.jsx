@@ -38,7 +38,6 @@ function reducer(state, action) {
         const recipesList = (action.payloadRecipes);
         const recipeIngredientsList = (action.payloadRecipeIngredients);
         const lastRecipeIngredientId = recipeIngredientsList.length
-        console.log("SETS LAST RECIPE INGREDIENT ID------", lastRecipeIngredientId)
         const lastRecipeId = recipesList.length
         const lastIngredientId = ingredientsList.length
 

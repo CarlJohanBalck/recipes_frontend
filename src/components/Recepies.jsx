@@ -67,7 +67,7 @@ function reducer(state, action) {
 
 
 
-function Recepies(props) {
+function Recepies() {
     const [state, dispatch] = useReducer(reducer, initialState);
     
     const loadingConfig = {
