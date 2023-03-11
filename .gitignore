@@ -4,8 +4,7 @@
 /node_modules
 /.pnp
 .pnp.js
-.deploy.sh
-.push_dockerhub.sh
+*.sh
 
 # testing
 /coverage
