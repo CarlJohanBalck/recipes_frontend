@@ -4,6 +4,7 @@ import FadeIn from "react-fade-in";
 import * as loading from '../assets/prepare-food.json';
 import * as upload from '../assets/upload.json';
 import * as done_upload from '../assets/done.json';
+import * as error_ani from '../assets/error.json';
 
 import Card from './Card'
 var config = require('../config');
@@ -18,7 +19,7 @@ const initialState = {
     groceryList: [],
     currentList: [],
     idList: [],
-    totalPrice: 0
+    initialLoadFailure: false
 }
 
 function reducer(state, action) {
@@ -32,6 +33,11 @@ function reducer(state, action) {
             recepiesList,
             done: true
 
+        };
+    case 'initialize_failure':
+        return {
+            ...state,
+            initialLoadFailure: true
         };
     case 'confirm_selection_in_progress':
         return {
@@ -50,15 +56,13 @@ function reducer(state, action) {
         return {
             ...state,
             currentList: [...state.currentList, action.payload.slice(1,-1)],
-            idList: [...state.idList, action.payload[0]],
-            totalPrice: state.totalPrice + action.payload[action.payload.length-2]
+            idList: [...state.idList, action.payload[0]]        
         };
     case 'remove_from_list':
         return {
             ...state,
             currentList: [...state.currentList.slice(1)],
-            idList: [...state.idList.slice(1)],
-            totalPrice: state.totalPrice > 0 ? state.totalPrice - action.payload[action.payload.length-2]: 0,
+            idList: [...state.idList.slice(1)]
         };
       default:
         throw new Error();
@@ -94,6 +98,14 @@ function Recepies() {
             preserveAspectRatio: "xMidYMid slice"
         }
     }
+    const errorAni = {
+        loop: false,
+        autoplay: true,
+        animationData: error_ani.default,
+        rendererSettings: {
+            preserveAspectRatio: "xMidYMid slice"
+        }
+    }
     
     const confirmSelection = () => {
         const {idList} = state
@@ -124,10 +136,11 @@ function Recepies() {
             dispatch({type: 'initialize_success',  payload: json})
         })
         .catch(function() {
+            dispatch({type: 'initialize_failure'})
             console.log("error")
         })
     }, [])
-    const { done, selectionComplete, selectionInProgress, recepiesList, currentList, totalPrice } = state
+    const { done, selectionComplete, selectionInProgress, recepiesList, currentList, initialLoadFailure } = state
 
     let recepiesListRender = recepiesList.map((recipe, index)=>{
         return(
@@ -145,7 +158,7 @@ function Recepies() {
     return (
         <React.Fragment>
                 <div>
-                    {!done ? (
+                    {!done && !initialLoadFailure ? (
                         <FadeIn>
                             <div className="center">
                                 <h2>Hämtar recept från databas</h2>
@@ -155,7 +168,7 @@ function Recepies() {
                     ) : (
                       
                         <FadeIn>
-                            {!selectionComplete && !selectionInProgress && (
+                            {!selectionComplete && !selectionInProgress && !initialLoadFailure && (
                                 <div className="container">
                                     <div className="box">
                                     {recepiesListRender}
@@ -184,6 +197,14 @@ function Recepies() {
                                     <div className="center">
                                         <h2>Klart!</h2>
                                         <Lottie options={completeConfig} height="25%" width="25%"/>
+                                    </div>
+                                </FadeIn>
+                            )}
+                            {initialLoadFailure && (
+                                <FadeIn>
+                                    <div className="center">
+                                        <h2>Kunde inte ladda hem recept</h2>
+                                        <Lottie options={errorAni} height="25%" width="25%"/>
                                     </div>
                                 </FadeIn>
                             )}

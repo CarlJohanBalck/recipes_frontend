@@ -125,7 +125,7 @@ function AddRecipe() {
         }
     const handleDatabaseResponseAddRecipe = (json) => {
         console.log("RESONSE: ", json)
-        if (json == "200") {
+        if (json === "200") {
             dispatch({type: "confirm_recipe_success"})
         } else {
             dispatch({type: "confirm_recipe_failure", payload: json})
@@ -134,7 +134,7 @@ function AddRecipe() {
     }
     const handleDatabaseResponseAddIngredient = (json) => {
         console.log("ADD INGREDIENT RESONSE: ", json)
-        if (json == "200") {
+        if (json === "200") {
             dispatch({type: "confirm_ingredient_success"})
         } else {
             dispatch({type: "confirm_ingredient_failure", payload: json})
