@@ -3,15 +3,13 @@ import React from 'react';
     return(
       <nav>
       <div className="nav-wrapper">
-        <a href="/" class="brand-logo center">Recept
+        <a href="/" className="brand-logo center">Recept
         </a>
         <ul className="left hide-on-med-and-down">
           <li className="inactive"><a href="/addRecipe">Lägg till recept</a></li>
         </ul>
       </div>
     </nav>
-   
-        
     )
 }
 

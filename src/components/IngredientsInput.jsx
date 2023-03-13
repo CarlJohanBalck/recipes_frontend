@@ -44,7 +44,7 @@ import React, {useState, useEffect} from 'react';
                 </div>
                 <div className="input-field col">
                 
-                <select class="browser-default" name="ingredient" onChange={handleChange}>
+                <select className="browser-default" name="ingredient" onChange={handleChange}>
                     {ingredientsOptions}
                 </select>
                 </div>

@@ -130,7 +130,11 @@ function Recepies() {
     }
     
     useEffect(() => {
-        fetch(config.pi_get_recepies)
+        const requestOptions = {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        };
+        fetch(config.pi_get_recepies, requestOptions)
         .then(response => response.json())
         .then(json => {
             dispatch({type: 'initialize_success',  payload: json})
