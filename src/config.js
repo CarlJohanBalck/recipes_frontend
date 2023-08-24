@@ -1,6 +1,6 @@
 var config = {};
 
-config.pi_address = "http://localhost:5002"
+config.pi_address = "http://192.168.0.34:5002"
 config.pi_get_recepies = config.pi_address + "/Siri/Recipes"
 config.pi_get_ingredients = config.pi_address + "/Siri/Ingredients"
 config.pi_get_units = config.pi_address + "/Siri/Units"

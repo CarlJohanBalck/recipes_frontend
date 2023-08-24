@@ -86,7 +86,6 @@ function AddIngredients() {
     
     const confirmRecipe = (recipeInfo) => {
         dispatch({type: "confirm_recipe_progress", payload: recipeInfo})
-        console.log("RECIPE INFO LIST: ", recipeInfo)
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -95,7 +94,6 @@ function AddIngredients() {
           fetch(config.pi_post_add_recipe, requestOptions)
             .then(response => response.json())
             .then(json => {
-              console.log("SUCCESS: ", json)
                 dispatch({type: "confirm_selection_success", payload: json})
             })
             .catch(function() {
@@ -105,7 +103,6 @@ function AddIngredients() {
 
     const confirmIngredients = (ingredientInfo) => {
         dispatch({type: "confirm_ingredient_progress", payload: ingredientInfo})
-        console.log("INGREDIENT INFO LIST: ", ingredientInfo)
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -114,7 +111,6 @@ function AddIngredients() {
         fetch(config.pi_post_add_ingredient, requestOptions)
             .then(response => response.json())
             .then(json => {
-            console.log("SUCCESS: ", json)
                 dispatch({type: "confirm_selection_success", payload: json})
             })
             .catch(function() {
