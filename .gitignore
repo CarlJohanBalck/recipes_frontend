@@ -24,3 +24,4 @@ push_dockerhub_arm64v8.sh
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+package-lock.json

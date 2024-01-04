@@ -12,6 +12,7 @@ var config = require('../config');
 
 const initialState = {
     done: false,
+    loggedIn: false,
     selected: false,
     selectionComplete: false,
     selectionInProgress: false,

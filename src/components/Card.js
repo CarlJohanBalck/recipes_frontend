@@ -24,15 +24,10 @@ const Card = ({recipe, index, onClick}) => {
             <span className="card-title">{recipe[1]}</span>
             <span to="/" className={buttonColor} onClick={() => handleClick(recipe, selected)}><i className="material-icons">{operation}</i></span>
         </div>
-        
-
         <div className='card-content'>
             <p>{recipe.desc}</p>
         </div>
       </div>
   );
  }
-
-
-
 export default Card;
