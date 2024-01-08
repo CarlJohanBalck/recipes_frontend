@@ -1,4 +1,4 @@
-name: ci
+name: CI/CD
 
 on:
   workflow_dispatch:
@@ -9,19 +9,28 @@ on:
   push:
     branches:
       - 'main'
+  pull_request:
+    branches: 'main'
 
 jobs:
-  build_test:
-      # The type of runner that the job will run on
-      runs-on: ubuntu-latest
-      # Steps represent a sequence of tasks that will be executed as part of the job
-      steps:
-        # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-        - name: npm ci, build and test
-          run: |
-            npm ci
-            npm run build --if-present
-            npm test
+  test:
+  runs-on: ubuntu-latest
+
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 14
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run tests
+      run: npm test
+
   docker-build-and-push:
     needs: build_test 
     runs-on: ubuntu-latest
